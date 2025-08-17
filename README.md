@@ -10,8 +10,7 @@ python main.py OUTPUT.pdf INPUT_DIR
 
 Examples:
 ```bash
-python main.py my_music_book.pdf static/tunes
-python main.py scottish_tunes.pdf "Scottish Tunes"
+python main.py fiddle_tunes.pdf static/tunes
 ```
 
 ## Setup

@@ -28,6 +28,12 @@ def make_cover_pdf(cover_image_path):
     c = canvas.Canvas(buf, pagesize=letter)
     page_w, page_h = letter
 
+    # Add title at the top
+    title_y = page_h - 1.5 * inch
+    c.setFont("Helvetica-Bold", 32)
+    c.setFillColor(HexColor("#2C3E50"))
+    c.drawCentredString(page_w / 2, title_y, "Fiddle Tunes")
+
     if os.path.exists(cover_image_path):
         try:
             # Open image to get dimensions
@@ -35,13 +41,17 @@ def make_cover_pdf(cover_image_path):
             img_w, img_h = img.size
 
             # Calculate scaling to fit the page while maintaining aspect ratio
-            scale = min(page_w / img_w, page_h / img_h)
+            # Leave space for title at top and footer at bottom
+            available_height = (
+                page_h - 3 * inch - 1.5 * inch
+            )  # space for title and footer
+            scale = min(page_w / img_w, available_height / img_h)
             new_w = img_w * scale
             new_h = img_h * scale
 
-            # Center the image on the page
+            # Center the image on the page (below title, above footer)
             x = (page_w - new_w) / 2
-            y = (page_h - new_h) / 2
+            y = (page_h - new_h) / 2 - 0.5 * inch  # shift down slightly for title
 
             # Draw the image
             c.drawImage(
@@ -54,13 +64,19 @@ def make_cover_pdf(cover_image_path):
             )
         except Exception as e:
             print(f"Warning: Could not add cover image: {e}")
-            # Fallback to a simple title page
-            c.setFont("Helvetica-Bold", 36)
-            c.drawCentredString(page_w / 2, page_h / 2, "Document Collection")
-    else:
-        # Fallback if no cover image
-        c.setFont("Helvetica-Bold", 36)
-        c.drawCentredString(page_w / 2, page_h / 2, "Document Collection")
+            # Fallback to a simple title page - title already added above
+            pass
+    # If no cover image, the title is already displayed
+
+    # Add signature footer
+    footer_y = 1.5 * inch
+    c.setFont("Helvetica", 12)
+    c.setFillColor(HexColor("#2C3E50"))
+    c.drawCentredString(
+        page_w / 2,
+        footer_y,
+        "If you would like a tune to be added, send a PDF to elliot@pourmand.com",
+    )
 
     c.save()
     buf.seek(0)
