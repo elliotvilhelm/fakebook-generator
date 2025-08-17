@@ -36,3 +36,5 @@ pdf-music/
 - Put cover image at `static/cover.png` (optional)
 - PDFs merged alphabetically 
 - Creates TOC and bookmarks automatically 
+
+![stat](static/cover.png)
